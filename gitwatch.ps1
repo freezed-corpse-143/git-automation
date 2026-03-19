@@ -103,8 +103,16 @@ while ($running)
         }
 
         # Push commits
-        git push origin $branch
-        Write-Host "Changes committed and pushed at $(Get-Date)" -ForegroundColor Green
+        $pushResult = git push origin $branch 2>&1
+        if ($LASTEXITCODE -eq 0)
+        {
+            Write-Host "Changes committed and pushed at $(Get-Date)" -ForegroundColor Green
+            # optional: display push result but not as error
+            Write-Host $pushResult -ForegroundColor Gray
+        } else
+        {
+            Write-Host "Push failed: $pushResult" -ForegroundColor Red
+        }
 
         # Key fix: reset status variable to empty
         $status = $null
